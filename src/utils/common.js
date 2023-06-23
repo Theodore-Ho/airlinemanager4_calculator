@@ -6,10 +6,11 @@ const active_hour = 16;
 const default_proportion = 0.45;
 const eco_friendly_proportion = 0.1;
 
-export function filterAircraft(range, runway) {
+export function filterAircraft(range, runway, stopover) {
     let filtered_aircraft = [];
     AircraftData.data.forEach(item => {
-        if(range <= parseInt(item.distance) && runway >= parseInt(item.runway)) {
+        const distance = stopover === "Yes" ? parseInt(item.distance) * 1.9 : parseInt(item.distance);
+        if(range <= distance && runway >= parseInt(item.runway)) {
             filtered_aircraft.push(item);
         }
     })
