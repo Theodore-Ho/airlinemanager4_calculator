@@ -17,7 +17,9 @@
         :search-options="{
           enabled: true
         }"
-        compactMode>
+        compactMode
+        @on-row-click="getSeatAllocation"
+    >
       <div slot="emptystate">
         No aircraft available.
       </div>
@@ -53,6 +55,9 @@ export default {
     },
     formatDays: function(value) {
       return value + " Days";
+    },
+    getSeatAllocation(val) {
+      this.$emit('getSelectedAircraft', val.row.name);
     }
   }
 }

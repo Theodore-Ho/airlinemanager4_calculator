@@ -119,7 +119,7 @@
             <b-col md="4">
               <div id="aircraft-selector-area">
                 <b-form-group label="Aircraft" label-for="aircraft">
-                  <AircraftSelector @getSelectedAircraft="getAircraft" id="aircraft"></AircraftSelector>
+                  <AircraftSelector @getSelectedAircraft="getAircraft" :aircraft_selected="aircraft_selected" id="aircraft"></AircraftSelector>
                 </b-form-group>
               </div>
             </b-col>
@@ -157,7 +157,8 @@
                           :fuel_flight_spend="fuel_flight_spend" :co2="co2" :co2_total="co2_total"
                           :co2_flight_spend="co2_flight_spend" :gross_profit="gross_profit"
                           :net_profit="net_profit"></SeatAllocationResult>
-    <RecommendAircraftList v-if="display_recommend_aircraft_list" :aircraft_data="recommend_aircraft_data"></RecommendAircraftList>
+    <RecommendAircraftList v-if="display_recommend_aircraft_list" :aircraft_data="recommend_aircraft_data"
+                           @getSelectedAircraft="getAircraftFromRecommend"></RecommendAircraftList>
   </div>
 </template>
 
@@ -232,7 +233,8 @@ export default {
         daily_profit: 0
       },
       recommend_aircraft_data: [],
-      display_recommend_aircraft_list: false
+      display_recommend_aircraft_list: false,
+      temporary_runway: null
     };
   },
   created() {
@@ -278,7 +280,9 @@ export default {
     aircraft_selected(val) {
       if(val !== 'find') {
         this.stopover = "No";
-        this.runway = "";
+        if(!this.temporary_runway) {
+          this.runway = "";
+        }
       }
     }
   },
@@ -288,6 +292,12 @@ export default {
     getAircraft(val) {
       this.aircraft_selected= val;
       this.aircraft = getAircraftByName(this.aircraft_selected);
+    },
+    getAircraftFromRecommend(val) {
+      this.aircraft_selected= val;
+      this.aircraft = getAircraftByName(this.aircraft_selected);
+      this.temporary_runway = this.runway;
+      this.calculateSeatAllocation();
     },
     calculateSeatAllocation() {
       this.display_seat_allocation_result = false;

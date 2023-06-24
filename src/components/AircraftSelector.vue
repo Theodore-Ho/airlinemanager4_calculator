@@ -1,8 +1,6 @@
 <template>
   <div>
-    <Select2 :options="aircraft_options" v-model="selected" style="width: 100%">
-      <option disabled value="0">Select one</option>
-    </Select2>
+    <Select2 :options="aircraft_options" v-model="selected" style="width: 100%"></Select2>
   </div>
 </template>
 
@@ -11,6 +9,7 @@ import Select2 from "@/components/Select2.vue";
 import AircraftData from "@/assets/data/aircraft.json";
 
 export default {
+  props: ["aircraft_selected"],
   components: {
     Select2
   },
@@ -22,6 +21,11 @@ export default {
   watch: {
     selected(val) {
       this.$emit('getSelectedAircraft', val);
+    },
+    aircraft_selected(val) {
+      if(val !== 'find') {
+        this.selected = val;
+      }
     }
   },
   data() {
